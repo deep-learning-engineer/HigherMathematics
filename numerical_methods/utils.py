@@ -121,3 +121,39 @@ def print_finite_differences_table(finite_table: list[list[float]]) -> None:
                 item[1] += 1
             print()
     
+    
+def Thomas_method(a: Sequence[float], b: Sequence[float],
+                  c: Sequence[float], f: Sequence[float]) -> list[float]:
+    """Возвращает решение СЛАУ по трёхдиагональной матрице и свободным коэффициентам.
+
+    Args:
+        a (Sequence[float]): значения под главной диагональю.
+        b (Sequence[float]): значения главной диагонали.
+        c (Sequence[float]): значения над главной диагональю.
+        f (Sequence[float]): свободные коэффициенты.
+
+    Returns:
+        list[float]: решение СЛАУ.
+    
+    Raises: 
+        - Если размер последовательности `b` не равен размеру последовательности `f`, 
+          или размер последовательность `a` (`c`) не равен размеру последовательности `f` - 1.  
+    """
+    n = len(f)
+    
+    if len(b) != n or len(a) != n - 1 or len(c) != n - 1:
+        raise ValueError("Некорректный размер последовательностей.") 
+    
+    
+    alpha, beta = [-c[0] / b[0]], [f[0]/b[0]] 
+    for i in range(1, n - 1):
+        alpha.append(-c[i] / (a[i - 1] * alpha[i - 1] + b[i]))
+        beta.append((f[i] - a[i - 1] * beta[i - 1]) / (a[i - 1] * alpha[i - 1] + b[i]))
+        
+        
+    answer = [(f[-1] - a[-1] * beta[-1]) / (b[-1] + a[-1]*alpha[-1])]
+    for i in range(n - 2, -1, -1):
+        answer.append(answer[n - i - 2] * alpha[i] + beta[i])
+         
+    return answer[::-1]
+    
