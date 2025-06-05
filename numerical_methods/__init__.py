@@ -12,3 +12,4 @@ from .interpolation import (
 )
 
 from .quadratures import *
+from .nonlinear_solutions import *
